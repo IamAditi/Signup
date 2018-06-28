@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../../shared/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-signup-form',
@@ -10,33 +11,63 @@ export class SignupFormComponent implements OnInit {
 
   counter = 0;
   selectedFile: File = null;
-  data: any;
+  data= {
+    fname: '',
+    lname: '',
+    email: '',
+    phone: '',
+    address: '',
+    pwd: ''
+  };
+  result = '';
+
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   signup(value){
-    // const fd = new FormData();
-    // fd.append('image', this.selectedFile, this.selectedFile.name);
-    // console.log(fd);
+    console.log(this.data);
     
-    this.userService.signUp(value)
-      .subscribe((res) => {
-        console.log('Sign up server response: ', res);
-      })
-    console.log(value);
-    console.log(this.selectedFile);
-    
-    
+    this.userService.signupLogin('/user/signup', this.data)
+      .subscribe((res :any) => {
+        if(res){
+          console.log(res.result._id);
+          
+          this.onUpload(res.result._id);          
+          this.result = res.message;
+          this.router.navigate(['/profile'])
+        }
+        else{
+          this.result = res.message;
+        }
+    })   
   }
+
+  onUpload(userId){
+    var dp = new FormData();
+    dp.append('myFile',  this.selectedFile, this.selectedFile.name);
+    console.log(dp);
+    this.userService.uploadPic(`/userSignup/uploadDp/${userId}`, dp)
+      .subscribe((response: any) => {
+        console.log('file upload response', response);   
+        if(response){
+          this.result = response.message;
+        }
+    })
+  }
+
   nextStep(value){
     this.counter = value
   }
-  onFileSelected(event){
+
+  onFileChanged(event){
     this.selectedFile = <File>event.target.files[0];
+    console.log(this.selectedFile);
+    
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
+
 
 }

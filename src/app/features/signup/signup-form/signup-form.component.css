@@ -134,5 +134,9 @@ body {
     font-size: 11px;
     color: #da2020;
 }
-
+.result{
+	color: #e7dfdf;
+    background: #f79146;
+    padding: 10px;
+}
 

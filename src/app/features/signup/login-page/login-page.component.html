@@ -1,0 +1,19 @@
+<form action="" #loginForm="ngForm">
+  <div class="form-control">
+    <label for="email">Email</label>
+    <input type="email" [(ngModel)]="data.email" name="email" #email="ngModel" required>
+    <div *ngIf="email.touched && email.invalid">
+      <span>Invalid field</span>
+    </div>
+  </div>
+  <div class="form-control">
+    <label for="pwd">Email</label>
+    <input type="password" [(ngModel)]="data.pwd" name="pwd" #pwd="ngModel" required>
+    <div *ngIf="pwd.touched && pwd.invalid">
+      <span>Invalid field</span>
+    </div>
+  </div>
+  <div class="form-control">
+    <button type="submit" (click)="login()">LOGIN</button>
+  </div>
+</form>

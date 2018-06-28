@@ -1,5 +1,5 @@
 <!-- multistep form -->
-<form id="msform" #signupForm="ngForm">
+<form id="msform" #signupForm="ngForm" enctype="multipart/form-data">
   <!-- progressbar -->
   <ul id="progressbar">
     <li class="active">Account Setup</li>
@@ -10,11 +10,11 @@
   <fieldset *ngIf="counter == '0'">
     <h2 class="fs-title">Create your account</h2>
     <h3 class="fs-subtitle">This is step 1</h3>
-    <input ngModel type="text" name="email" placeholder="Email" #email="ngModel" required/>
+    <input ngModel [(ngModel)]="data.email" type="text" name="email" placeholder="Email" #email="ngModel" required/>
     <div class="error" *ngIf="email.touched && email.invalid">
       <span>This field is invalid</span>
     </div>
-    <input ngModel type="password" name="pass" placeholder="Password" #pwd="ngModel" required/>
+    <input ngModel [(ngModel)]="data.pwd" type="password" name="pass" placeholder="Password" #pwd="ngModel" required/>
     <div class="error" *ngIf="pwd.touched && pwd.invalid">
       <span>This field is invalid</span>
     </div>
@@ -32,30 +32,34 @@
   <fieldset *ngIf="counter == '1'">
     <h2 class="fs-title">Profile</h2>
     <h3 class="fs-subtitle">Your profile pic</h3>
-    <input type="file" name="dp" (change)="onFileSelected($event)"/>
+    <!-- <input type="file" name="dp" (change)="onFileSelected($event)"/> -->
+    <input style="display: none" type="file" (change)="onFileChanged($event)" #fileInput>
+    <button (click)="fileInput.click()">Select File</button>
+    <!-- <button (click)="onUpload()">Upload!</button> -->
     <input type="button" (click)="nextStep(0)" name="previous" class="previous action-button" value="Previous" />
     <input type="button" (click)="nextStep(2)" name="next" class="next action-button" value="Next" />
   </fieldset>
   <fieldset *ngIf="counter == '2'">
     <h2 class="fs-title">Personal Details</h2>
     <h3 class="fs-subtitle">We will never sell it</h3>
-    <input ngModel type="text" name="fname" placeholder="First Name" #fname="ngModel" required/>
+    <input ngModel [(ngModel)]="data.fname" type="text" name="fname" placeholder="First Name" #fname="ngModel" required/>
     <div class="error" *ngIf="fname.touched && fname.invalid">
       <span>This field is invalid</span>
     </div>
-    <input ngModel type="text" name="lname" placeholder="Last Name" #lname="ngModel" required/>
+    <input ngModel [(ngModel)]="data.lname" type="text" name="lname" placeholder="Last Name" #lname="ngModel" required/>
     <div class="error" *ngIf="lname.touched && lname.invalid">
       <span>This field is invalid</span>
     </div>
-    <input ngModel type="text" name="phone" placeholder="Phone" #phone="ngModel" required/>
+    <input ngModel [(ngModel)]="data.phone" type="text" name="phone" placeholder="Phone" #phone="ngModel" required/>
     <div class="error" *ngIf="phone.touched && phone.invalid">
       <span>This field is invalid</span>
     </div>
-    <textarea ngModel name="address" placeholder="Address" #address="ngModel"></textarea>
+    <textarea ngModel [(ngModel)]="data.address" name="address" placeholder="Address" #address="ngModel"></textarea>
     <div class="error" *ngIf="address.touched && address.invalid">
       <span>This field is invalid</span>
     </div>
     <input type="button" (click)="nextStep(1)" name="previous" class="previous action-button" value="Previous" />
-    <input type="submit" (click)="nextStep(0);signup(signupForm.value)" [disabled]="fname.invalid || lname.invalid || phone.invalid || address.invalid" name="submit" class="submit action-button" value="Submit" />
+    <input type="submit" (click)="signup(signupForm.value)" [disabled]="fname.invalid || lname.invalid || phone.invalid || address.invalid" name="submit" class="submit action-button" value="Submit" />
+    <h3 *ngIf="result != ''" class="result">{{ result }}</h3>
   </fieldset>
 </form>
